@@ -17,30 +17,46 @@ app.use(staticAssets);
 
 let count = 0;
 
-app.get('/size', (req, res) => {
-  // generate an absolutely massive 1mb json object and then send it
-  const size = 1024 * 1024;
-  const data = new Array(size).fill('a');
-  res.send({ data });
-})
-
 app.get('/count', function (req, res) {
   console.log(req.cookies);
 
   let count = (Number(req.cookies.count) + 1) || 1;
 
   res.cookie('count', count)
-  res.cookie('test', 'HIIII')
 
-  count++;
   res.send({ count });
 })
 
 app.delete('/count', (req, res) => {
-  console.log(req.cookies);
-  // res.clearCookie('count')
+  res.clearCookie('count')
   res.send({ count: 0 })
 })
+
+app.post('/login', (req, res) => {
+  const { name, password } = req.body;
+
+  const user = users.find(user => user.name === name && user.password === password)
+
+  if (user) {
+    res.cookie('userId', user.id, { maxAge: 1000 * 5 })
+    res.send({ user })
+  } else {
+    res.status(401).send({ message: 'User not found' })
+  }
+})
+
+app.get('/me', (req, res) => {
+  const user = users.find(user => user.id === Number(req.cookies.userId))
+
+  user
+    ? res.send({ user })
+    : res.status(404).send({ message: 'User not found' })
+})
+
+app.get('/logout', (req, res) => {
+  res.clearCookie('userId')
+  res.sendStatus(204)
+});
 
 const port = process.env.PORT || 8080
 

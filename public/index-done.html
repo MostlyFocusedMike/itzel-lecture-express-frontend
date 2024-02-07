@@ -4,15 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cookie Practice</title>
-  <style>
-    form {
-      display: flex;
-      flex-direction: column;
-      width: 300px;
-      border: 2px solid black;
-      padding: 1rem;
-    }
-  </style>
 </head>
 <body>
   <button id="add-count">Add 1</button>
@@ -32,8 +23,6 @@
   <script type="module">
     const incrementButton = document.querySelector('#add-count')
     const resetButton = document.querySelector('#clear-count')
-
-    const size = await fetch('/size', { credentials: 'include' }).then(r => r.json()).then(console.log)
 
 
     incrementButton.addEventListener('click', async () => {
